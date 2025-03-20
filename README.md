@@ -30,3 +30,22 @@ or for `https_checks_disable_no_prints.suprx`
 *PCSA00000
 ur0:tai/https_checks_disable_no_prints.suprx
 ```
+
+# Building
+assuming you have [vdpm](https://github.com/vitasdk/vdpm) installed on linux or WSL on windows, you can run the following command to build
+```
+python3 build.py
+```
+
+python script usage
+```
+usage: build.py [-h] [-n] [-v [VITA_IP]]
+
+build script
+
+options:
+  -h, --help            show this help message and exit
+  -n, --no-prints       Builds without doing log prints, can be slighty faster and not clog up the print space
+  -v [VITA_IP], --vita-ip [VITA_IP]
+                        IP of your vita to ftp upload the plugin to ur0:tai
+```

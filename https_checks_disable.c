@@ -29,19 +29,19 @@ int run_scehttpsdisableoption_until_success(unsigned int arglen, void *argp) {
 	while (1) {
 		https_res = sceHttpsDisableOption(ALL_HTTPS_FLAGS);
 		if (https_res != 0) {
-			LOG("sceHttpsDisableOption failed with 0x%x likley http not init yet so waiting 5 seconds to try again. tried %lld times\n",https_res,++try_number);
+			LOG("https_checks_disable log: sceHttpsDisableOption failed with 0x%x likley http not init yet so waiting 5 seconds to try again. tried %lld times\n",https_res,++try_number);
 			sceKernelDelayThread(5000000);
 		}
 		else {
-			LOG("sceHttpsDisableOption ran succesfully, although will run it again in 4 seconds just in case\n");
+			LOG("https_checks_disable log: sceHttpsDisableOption ran succesfully, although will run it again in 4 seconds just in case\n");
 			sceKernelDelayThread(4000000);
 			https_res = sceHttpsDisableOption(ALL_HTTPS_FLAGS);
 			if (https_res == 0) {
-				LOG("All https checks disabled!\n");
+				LOG("https_checks_disable log: All https checks disabled!\n");
 				sceKernelExitThread(0);
 				return 0;
 			}
-			LOG("Fail? 0x%x oh well, here we go again\n",https_res);
+			LOG("https_checks_disable log: Fail? 0x%x oh well, here we go again\n",https_res);
 		}
 
 
@@ -55,15 +55,15 @@ int module_start(SceSize argc, void *args){
 	sceSysmoduleLoadModule(SCE_SYSMODULE_HTTP);
 	SceUID second_thread_id;
 	int start_thread_res;
-	LOG("https_checks_disable version 1.01 started\n");
+	LOG("https_checks_disable log: https_checks_disable version 1.02 started\n");
 	second_thread_id = sceKernelCreateThread("run_scehttpsdisableoption_until_success thread", run_scehttpsdisableoption_until_success, 0x10000100, 0x1000, 0, 0, NULL);
-	LOG("second_thread_id %x\n",second_thread_id);
+	LOG("https_checks_disable log: second_thread_id %x\n",second_thread_id);
 	if (second_thread_id > 0) {
 		start_thread_res = sceKernelStartThread(second_thread_id,0,0);
-		LOG("start_thread_res %x\n",start_thread_res);
+		LOG("https_checks_disable log: start_thread_res %x\n",start_thread_res);
 	}
 	else {
-		LOG("Failed to make a thread\n");
+		LOG("https_checks_disable log: Failed to make a thread\n");
 	}
 	return SCE_KERNEL_START_SUCCESS;
 }

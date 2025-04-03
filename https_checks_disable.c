@@ -25,10 +25,11 @@ int module_exit(){
 
 int run_scehttpsdisableoption_until_success(unsigned int arglen, void *argp) {
 	int https_res;
+	uint64_t try_number = 0;
 	while (1) {
 		https_res = sceHttpsDisableOption(ALL_HTTPS_FLAGS);
 		if (https_res != 0) {
-			LOG("sceHttpsDisableOption failed with 0x%x likley http not init yet so waiting 5 seconds to try again\n",https_res);
+			LOG("sceHttpsDisableOption failed with 0x%x likley http not init yet so waiting 5 seconds to try again. tried %lld times\n",https_res,++try_number);
 			sceKernelDelayThread(5000000);
 		}
 		else {
@@ -54,7 +55,7 @@ int module_start(SceSize argc, void *args){
 	sceSysmoduleLoadModule(SCE_SYSMODULE_HTTP);
 	SceUID second_thread_id;
 	int start_thread_res;
-	LOG("https_checks_disable version 1.0 started\n");
+	LOG("https_checks_disable version 1.01 started\n");
 	second_thread_id = sceKernelCreateThread("run_scehttpsdisableoption_until_success thread", run_scehttpsdisableoption_until_success, 0x10000100, 0x1000, 0, 0, NULL);
 	LOG("second_thread_id %x\n",second_thread_id);
 	if (second_thread_id > 0) {
